@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import Home from './components/Home';
+import ImageUpload from './components/ImageUpload';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import NavBar from './components/NavBar';
+import DressState from './context/dressState';
+import DressDetails from './components/DressDetails';
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    
+    <DressState>
+      <div className='App'>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path="/addDress" element={<ImageUpload />} />
+          <Route path="/dressDetails/:dressId" element={<DressDetails />} />
+        </Routes>
+      </Router>
+      </div>
+    </DressState>
   );
 }
-
 export default App;
