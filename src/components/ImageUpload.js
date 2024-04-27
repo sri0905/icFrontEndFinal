@@ -58,34 +58,28 @@ const ImageUpload = () => {
     { name: 'Sandy Brown', hex: '#F4A460' },
     { name: 'Pale Violet Red', hex: '#DB7093' }
   ];
-  
-
-  
 
   const clothingTypes = [
-    "T-shirt", "Shirt", "Polo shirt", "Tank top", "Blouse", "Sweater", "Hoodie", "Cardigan", "Jacket",
+    "T-shirt", "Shirt", "Polo shirt", "Tank top", "Sweater", "Hoodie", "Cardigan", "Jacket",
     "Coat", "Parka", "Windbreaker", "Vest", "Dress", "Skirt", "Jeans", "Pants", "Shorts", "Leggings",
-    "Jumpsuit", "Romper", "Suit", "Tuxedo", "Blazer", "Chinos", "Sweatpants", "Tracksuit", "Swimwear",
-    "Bikini", "One-piece swimsuit", "Rash guard", "Underwear", "Bra", "Panties", "Boxers", "Briefs",
-    "Thongs", "Lingerie", "Nightwear", "Pajamas", "Nightgown", "Robe", "Sleepwear"
+    "Jumpsuit", "Romper", "Suit", "Tuxedo", "Blazer", "Chinos", "Sweatpants", "Tracksuit", "Swimwear", "Boxers", "Briefs", "Nightwear", "Pajamas", "Nightgown", "Robe", "Sleepwear"
   ];
-
+  const [selectedColorHex, setSelectedColorHex] = useState('')
   const [dressType, setDressType] = useState("");
   const [brand, setBrand] = useState("");
   const [size, setSize] = useState("");
   const [file, setFile] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [image, setImage] = useState("");
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState({});
+  const handleColorChange = (event) => {
+    const selectedColorName = event.target.value;
+    const selectedColor = clothingColors.find(colordetails => colordetails.name === selectedColorName);
+    setColor(selectedColor);
+    setSelectedColorHex(selectedColor.hex);
+  }
+  
 
-  const getContrastColor = (hexColor) => {
-    const threshold = 130;
-    const hRed = parseInt(hexColor.substring(1, 3), 16);
-    const hGreen = parseInt(hexColor.substring(3, 5), 16);
-    const hBlue = parseInt(hexColor.substring(5, 7), 16);
-    const luminance = 0.299 * hRed + 0.587 * hGreen + 0.114 * hBlue;
-    return luminance > threshold ? '#000000' : '#FFFFFF';
-  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -108,15 +102,13 @@ const ImageUpload = () => {
         formData.append('dressType', dressType);
         formData.append('brand', brand);
         formData.append('size', size);
-        formData.append('color', color);
-
-        console.log("the color of thr dress is:",color)
+        formData.append('color', JSON.stringify(color)); 
+        console.log("the color of thr dress is:", color)
         const response = await axios.post('http://localhost:5000/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
-
         console.log('File uploaded successfully:', response.data);
         setShowAlert(true);
         setTimeout(() => {
@@ -138,32 +130,24 @@ const ImageUpload = () => {
           <input type="file" className="form-control" id="image" accept="image/*" onChange={handleFileChange} required />
           <div id="imageHelp" className="form-text">Please upload a picture with minimal background area</div>
         </div>
-        {image && <img src={image} style={{ maxWidth: "10rem" }} alt="Dress preview" />}
+        <div>
+          {image && <img src={image} style={{ maxWidth: "10rem" }} alt="Dress preview" />}
+          {color && <div> <input type="color" value={selectedColorHex} style={{pointerEvents:"none"}} onChange={(event) => setSelectedColorHex(event.target.value)} /></div>}
+        </div>
         <div className="mb-3">
-          <label htmlFor="brand" className="form-label">Brand:</label>
-          <input type="text" className="form-control" id="brand" value={brand} onChange={(event) => setBrand(event.target.value)} required />
+          <input type="text" className="form-control mt-3" id="brand" placeholder='Brand:' value={brand} onChange={(event) => setBrand(event.target.value)} />
         </div>
         <div className="mb-3">
           <label htmlFor="color" className="form-label">Select the color of clothing:</label>
-          <select name="color" className="form-select mb-3" value={color} onChange={(event) => setColor(event.target.value)}>
+          <select name="color" className="form-select mb-3" value={color.name} onChange={handleColorChange}>
             <option value="">Select a color</option>
-            {clothingColors.sort((colorA, colorB) => {
-  const nameA = colorA.name.toLowerCase(); // Convert names to lowercase for case-insensitive comparison
-  const nameB = colorB.name.toLowerCase();
-  
-  if (nameA < nameB) {
-    return -1; // colorA should come before colorB
-  }
-  if (nameA > nameB) {
-    return 1; // colorA should come after colorB
-  }
-  return 0; // names are equal
-}).map((Color, index) => (
-              <option key={index} value={Color.name} style={{ backgroundColor: Color.hex, color: getContrastColor(Color.hex) }}>
-                {Color.name}
+            {clothingColors.map((mappedColor, index) => (
+              <option key={index} value={mappedColor.name} style={{ backgroundColor: mappedColor.hex }}>
+                {mappedColor.name}
               </option>
             ))}
           </select>
+
         </div>
         <div className="mb-3">
           <label htmlFor="dressType" className="form-label">Select the type of clothing:</label>

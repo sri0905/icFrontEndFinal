@@ -15,10 +15,8 @@ const NavBar = () => {
                            
                         </ul> 
                         <button className="btn btn-outline-warning mx-3" type="submit"> <Link to="/addDress" style={{textDecoration:"none",color:"inherit"}}> Add a new Dress</Link></button>
-                        <form className="d-flex" role="search">
-                            <input className="form-control me-2 bg-warning" type="search" placeholder="Search" aria-label="Search"/>
-                                <button className="btn btn-outline-warning" type="submit">Search</button>
-                        </form>
+                        <button className="btn btn-outline-warning mx-3" type="submit"> <Link to="/generateADress" style={{textDecoration:"none",color:"inherit"}}>Generate a Dress</Link></button>
+                        
                     </div>
                 </div>
             </nav>
