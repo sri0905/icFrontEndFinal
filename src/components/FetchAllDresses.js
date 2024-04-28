@@ -8,13 +8,15 @@ const FetchAllDresses = () => {
   const { onDelete, fetchData, dresses, showAlert } = context;
   const filters = [{ name: "Dress Type", prop: "dressType" }, { name: "Size", prop: "size" }, { name: "Brand", prop: "brand" }]
   const [selectedDresses, setSelectedDresses] = useState([]); // Initialize with all dresses
-  const [filteredColor, setFilteredColor] = useState('')
+  
   useEffect(() => {
     fetchData(); // Call the fetchData function
   }, []);
 
   useEffect(() => {
     setSelectedDresses(dresses);
+    
+    
   }, [dresses]);
 
   // Function to handle filtering based on selected property
@@ -33,14 +35,17 @@ const FetchAllDresses = () => {
 
   return (
     <div>
+
+
       {showAlert && (<Alert message="Your dress has been removed from your wardrobe" type="info" />)}
       <div className='row mb-3'>
         <h2 className='text-dark mb-3 col'>Your Wardrobe:</h2>
-        <button className="btn btn-primary col-1 mx-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Filter</button>
+      {dresses.length==0 && ( <h3>Your wardrobe has no dress, please add a dress</h3>  )}
+        {!dresses.length==0 && <button className="btn btn-primary col-1 mx-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Filter</button>}
 
         <div className="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabIndex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
           <div className="offcanvas-header">
-            <h5 className="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
+            <h5 className="offcanvas-title" id="offcanvasScrollingLabel">Select filters:</h5>
             <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div className="offcanvas-body">
@@ -77,12 +82,12 @@ const FetchAllDresses = () => {
           </div>
         </div>
         {/* Button to reset filters */}
-        <button className="btn btn-secondary col-2" onClick={resetFilters}>Reset Filters</button>
+        {!dresses.length==0 && <button className="btn btn-secondary col-2" onClick={resetFilters}>Reset Filters</button>}
       </div>
 
       <div className="row">
         {/* Render filtered dresses */}
-        {selectedDresses.map((dress, index) => (
+        { selectedDresses && selectedDresses.map((dress, index) => (
           <div key={index} className="card col-4 mx-3 my-3" style={{ width: "18rem" }}>
             <img src={dress.image} className="card-img-top mt-2" alt={dress.color} style={{ maxWidth: "15rem", maxHeight: "30rem" }} />
             <Link to={`dressDetails/${dress._id}`} className='btn btn-info' style={{ textDecoration: "none", backgroundColor: "inherit", border: "none", textAlign: "inherit" }}>

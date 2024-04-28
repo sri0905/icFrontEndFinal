@@ -35,9 +35,8 @@ const GenerateADress = () => {
     // Function to handle checkbox change
     const handleOnChange = (index) => {
         setDressTypes((prevDressTypes) => {
-            // Create a copy of the dressTypes array
+            
             const updatedDressTypes = [...prevDressTypes];
-            // Toggle the checked state of the dress type at the given index
             updatedDressTypes[index] = {
                 ...updatedDressTypes[index],
                 checked: !updatedDressTypes[index].checked
@@ -50,7 +49,6 @@ const GenerateADress = () => {
     const handleUpload = async (event) => {
         event.preventDefault();
         const types = dressTypes.filter((type) => type.checked).map((type) => type.name);
-        console.log(types);
         const response = await axios.post('http://localhost:5000/generateARandomDress', types, {
             headers: {
               'Content-Type': 'application/json'
@@ -58,7 +56,6 @@ const GenerateADress = () => {
         });
         setGeneratedDress(response.data.generatedDresses);
     };
-
     return (
         <div className="container">
             <h4 className="mb-3">Select the types of clothes that need to be generated </h4>
@@ -70,7 +67,7 @@ const GenerateADress = () => {
                     <h5 className="card-text">{dress.dressType}</h5>
                     
                   </div>
-                  </div>
+                  </div>            
             ))}
             <form onSubmit={handleUpload}>
                 <div>

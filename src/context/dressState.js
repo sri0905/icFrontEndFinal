@@ -11,9 +11,8 @@ const fetchData = async () => {
         'Content-Type': 'application/json'
       }
     });
-    console.log(response.data);
     setDresses(response.data);
-    console.log("dresses:",dresses)
+
   } catch (error) {
     console.error('Error fetching all dresses:', error);
   }
